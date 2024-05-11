@@ -8,7 +8,11 @@ const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5000']
+  origin: ["http://localhost:5173",
+    "http://localhost:5000",
+    "https://online-group-study-d5764.web.app",
+    "https://online-group-study-server-sepia.vercel.app"],
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -33,6 +37,11 @@ async function run() {
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
 
+    app.get('/assignments', async (req, res) => {
+      const cursor = assignmentCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
     app.post('/assignments', async (req, res) => {
       const newAssignment = req.body;
@@ -57,9 +66,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Server Started')
-  })
-  
-  app.listen(port, () => {
-    console.log(`Server started on http://localhost: ${port}`)
-  })
+  res.send('Server Started')
+})
+
+app.listen(port, () => {
+  console.log(`Server started on http://localhost: ${port}`)
+})
