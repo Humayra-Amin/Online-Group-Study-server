@@ -35,20 +35,56 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
 
+
+    // To get data
     app.get('/assignments', async (req, res) => {
       const cursor = assignmentCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
+
+    // for update
+    app.get('/assignments/:_id', async (req, res) => {
+      const _id = req.params._id;
+      const query = { _id: new ObjectId(_id) }
+      const result = await assignmentCollection.findOne(query);
+      res.send(result);
+    })
+
+
+    // for create
     app.post('/assignments', async (req, res) => {
       const newAssignment = req.body;
       console.log(newAssignment);
       const result = await assignmentCollection.insertOne(newAssignment);
       res.send(result);
     })
+
+
+    // to update
+    app.put('/assignments/:_id', async (req, res) => {
+      const _id = req.params._id;
+      const filter = { _id: new ObjectId(_id) }
+      const options = { upsert: true };
+      const updatedAssignments = req.body;
+      const assignments = {
+        $set: {
+          title: updatedAssignments.title,
+          description: updatedAssignments.description,
+          image: updatedAssignments.image,
+          marks: updatedAssignments.marks,
+          difficultyLevel: updatedAssignments.difficultyLevel,
+        }
+      }
+      const result = await assignmentCollection.updateOne(filter, assignments, options);
+      res.send(result);
+    })
+
+    
 
 
 
