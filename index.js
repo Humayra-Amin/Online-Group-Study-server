@@ -84,7 +84,13 @@ async function run() {
       res.send(result);
     })
 
-    
+    // for delete
+    app.delete('/assignments/:_id', async (req, res) => {
+      const _id = req.params._id;
+      const query = { _id: new ObjectId(_id) }
+      const result = await assignmentCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
