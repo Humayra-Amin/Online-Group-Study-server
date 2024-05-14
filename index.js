@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -37,6 +38,9 @@ async function run() {
 
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
+
+    // auth related api
+    
 
 
     // To get data
@@ -83,6 +87,7 @@ async function run() {
       const result = await assignmentCollection.updateOne(filter, assignments, options);
       res.send(result);
     })
+
 
     // for delete
     app.delete('/assignments/:_id', async (req, res) => {
