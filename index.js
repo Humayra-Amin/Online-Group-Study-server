@@ -2,21 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-// const multer = require('multer');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// const upload = multer({
-//   dest: 'uploads/', // Adjust destination folder as needed
-//   fileFilter: (req, file, cb) => {
-//     const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-//     if (allowedFileTypes.includes(file.mimetype)) {
-//       cb(null, true);
-//     } else {
-//       cb(new Error('Invalid file type. Only PDF or DOC files are allowed.'));
-//     }
-//   }
-// });
 
 // Middleware
 app.use(cors({
@@ -24,9 +12,12 @@ app.use(cors({
     "http://localhost:5000",
     "https://online-group-study-d5764.web.app",
     "https://online-group-study-d5764.firebaseapp.com",
-    "https://online-group-study-server-azure.vercel.app","https://online-group-study-server-69fuf1m0f-humayra-amins-projects.vercel.app"],
+    "https://online-group-study-server-azure.vercel.app",
+    "https://online-group-study-server-cz0kcm9av-humayra-amins-projects.vercel.app"],
 }));
 app.use(express.json());
+
+
 
 // MongoDB setup
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.9jkswbp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -45,8 +36,6 @@ async function run() {
     // console.log("Connected to MongoDB!");
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
-    const submissionCollection = client.db('AssignmentDB').collection('submission');
-
 
 
     // To get data
@@ -65,15 +54,6 @@ async function run() {
       res.send(result);
     });
 
-    // app.get('/myAssignment/:email', async (req, res) => {
-    //   const email = req.params.email;
-    //   const query = { email: email };
-    //   const cursor = submissionCollection.find(query);
-    //   const results = await cursor.toArray();
-    //   res.send(results);
-    // });
-
-
 
     // for create
     app.post('/assignments', async (req, res) => {
@@ -81,38 +61,9 @@ async function run() {
       console.log(newAssignment);
       const result = await assignmentCollection.insertOne(newAssignment);
       res.send(result);
-    })
-
-
-    // app.post('/submit-assignment', upload.single('pdfFile'), async (req, res) => {
-    //   try {
-    //     const { assignmentId, quickNote, userEmail } = req.body;
-    //     const pdfFile = req.file;
-
-    //     if (!assignmentId || !pdfFile || !quickNote || !userEmail) {
-    //       return res.status(400).json({ error: 'Missing required fields' });
-    //     }
-
-    //     const fileBuffer = req.file.buffer;
-
-    //     const submission = {
-    //       assignmentId: new ObjectId(assignmentId),
-    //       pdfFile: fileBuffer,
-    //       quickNote,
-    //       userEmail,
-    //       status: 'pending'
-    //     };
-    //     const result = await submissionCollection.insertOne(submission);
-
-    //     res.status(200).json({ message: 'Assignment submitted successfully!' });
-    //   } catch (error) {
-    //     console.error('Error submitting assignment:', error);
-    //     res.status(500).json({ error: 'Failed to submit assignment' });
-    //   }
-    // });
-
-
-
+    });
+    
+    
     // to update
     app.put('/assignments/:_id', async (req, res) => {
       const _id = req.params._id;
@@ -139,9 +90,7 @@ async function run() {
       const query = { _id: new ObjectId(_id) }
       const result = await assignmentCollection.deleteOne(query);
       res.send(result);
-    })
-
-
+    });
 
 
     // Send a ping to confirm a successful connection
