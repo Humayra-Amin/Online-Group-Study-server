@@ -3,7 +3,6 @@ const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const multer = require('multer');
-const { Readable } = require('stream');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -20,14 +19,21 @@ const upload = multer({
 });
 
 // Middleware
-app.use(cors({
-  origin: ["http://localhost:5173",
-    "http://localhost:5000",
-    "https://online-group-study-d5764.web.app",
-    "https://online-group-study-d5764.firebaseapp.com",
-    "https://online-group-study-server-sepia.vercel.app",
-    "https://online-group-study-server-66irkm0h6-humayra-amins-projects.vercel.app"],
-}));
+// app.use(cors({
+//   origin:
+// }));
+
+const corsConfig = {
+  origin:  ["http://localhost:5173",
+  "http://localhost:5000",
+  "https://online-group-study-d5764.web.app",
+  "https://online-group-study-d5764.firebaseapp.com",
+  "https://online-group-study-server-sepia.vercel.app"],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig))
+app.options("", cors(corsConfig))
 app.use(express.json());
 
 // MongoDB setup
