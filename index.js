@@ -2,38 +2,30 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const multer = require('multer');
+// const multer = require('multer');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const upload = multer({
-  dest: 'uploads/', // Adjust destination folder as needed
-  fileFilter: (req, file, cb) => {
-    const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (allowedFileTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type. Only PDF or DOC files are allowed.'));
-    }
-  }
-});
+// const upload = multer({
+//   dest: 'uploads/', // Adjust destination folder as needed
+//   fileFilter: (req, file, cb) => {
+//     const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+//     if (allowedFileTypes.includes(file.mimetype)) {
+//       cb(null, true);
+//     } else {
+//       cb(new Error('Invalid file type. Only PDF or DOC files are allowed.'));
+//     }
+//   }
+// });
 
 // Middleware
-// app.use(cors({
-//   origin:
-// }));
-
-const corsConfig = {
-  origin:  ["http://localhost:5173",
-  "http://localhost:5000",
-  "https://online-group-study-d5764.web.app",
-  "https://online-group-study-d5764.firebaseapp.com",
-  "https://online-group-study-server-sepia.vercel.app"],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}
-app.use(cors(corsConfig))
-app.options("", cors(corsConfig))
+app.use(cors({
+  origin: ["http://localhost:5173",
+    "http://localhost:5000",
+    "https://online-group-study-d5764.web.app",
+    "https://online-group-study-d5764.firebaseapp.com",
+    "https://online-group-study-server-azure.vercel.app","https://online-group-study-server-69fuf1m0f-humayra-amins-projects.vercel.app"],
+}));
 app.use(express.json());
 
 // MongoDB setup
@@ -92,32 +84,32 @@ async function run() {
     })
 
 
-    app.post('/submit-assignment', upload.single('pdfFile'), async (req, res) => {
-      try {
-        const { assignmentId, quickNote, userEmail } = req.body;
-        const pdfFile = req.file;
+    // app.post('/submit-assignment', upload.single('pdfFile'), async (req, res) => {
+    //   try {
+    //     const { assignmentId, quickNote, userEmail } = req.body;
+    //     const pdfFile = req.file;
 
-        if (!assignmentId || !pdfFile || !quickNote || !userEmail) {
-          return res.status(400).json({ error: 'Missing required fields' });
-        }
+    //     if (!assignmentId || !pdfFile || !quickNote || !userEmail) {
+    //       return res.status(400).json({ error: 'Missing required fields' });
+    //     }
 
-        const fileBuffer = req.file.buffer;
+    //     const fileBuffer = req.file.buffer;
 
-        const submission = {
-          assignmentId: new ObjectId(assignmentId),
-          pdfFile: fileBuffer,
-          quickNote,
-          userEmail,
-          status: 'pending'
-        };
-        const result = await submissionCollection.insertOne(submission);
+    //     const submission = {
+    //       assignmentId: new ObjectId(assignmentId),
+    //       pdfFile: fileBuffer,
+    //       quickNote,
+    //       userEmail,
+    //       status: 'pending'
+    //     };
+    //     const result = await submissionCollection.insertOne(submission);
 
-        res.status(200).json({ message: 'Assignment submitted successfully!' });
-      } catch (error) {
-        console.error('Error submitting assignment:', error);
-        res.status(500).json({ error: 'Failed to submit assignment' });
-      }
-    });
+    //     res.status(200).json({ message: 'Assignment submitted successfully!' });
+    //   } catch (error) {
+    //     console.error('Error submitting assignment:', error);
+    //     res.status(500).json({ error: 'Failed to submit assignment' });
+    //   }
+    // });
 
 
 
