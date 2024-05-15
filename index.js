@@ -24,7 +24,9 @@ app.use(cors({
   origin: ["http://localhost:5173",
     "http://localhost:5000",
     "https://online-group-study-d5764.web.app",
-    "https://online-group-study-server-sepia.vercel.app"],
+    "https://online-group-study-d5764.firebaseapp.com",
+    "https://online-group-study-server-sepia.vercel.app",
+    "https://online-group-study-server-66irkm0h6-humayra-amins-projects.vercel.app"],
 }));
 app.use(express.json());
 
@@ -42,13 +44,13 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // await client.connect();
-    console.log("Connected to MongoDB!");
+    // console.log("Connected to MongoDB!");
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
     const submissionCollection = client.db('AssignmentDB').collection('submission');
 
 
-    
+
     // To get data
     app.get('/assignments', async (req, res) => {
       const cursor = assignmentCollection.find();
@@ -63,7 +65,15 @@ async function run() {
       const query = { _id: new ObjectId(_id) }
       const result = await assignmentCollection.findOne(query);
       res.send(result);
-    })
+    });
+
+    // app.get('/myAssignment/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const query = { email: email };
+    //   const cursor = submissionCollection.find(query);
+    //   const results = await cursor.toArray();
+    //   res.send(results);
+    // });
 
 
 
@@ -80,13 +90,13 @@ async function run() {
       try {
         const { assignmentId, quickNote, userEmail } = req.body;
         const pdfFile = req.file;
-      
+
         if (!assignmentId || !pdfFile || !quickNote || !userEmail) {
           return res.status(400).json({ error: 'Missing required fields' });
         }
-    
+
         const fileBuffer = req.file.buffer;
-    
+
         const submission = {
           assignmentId: new ObjectId(assignmentId),
           pdfFile: fileBuffer,
@@ -95,7 +105,7 @@ async function run() {
           status: 'pending'
         };
         const result = await submissionCollection.insertOne(submission);
-      
+
         res.status(200).json({ message: 'Assignment submitted successfully!' });
       } catch (error) {
         console.error('Error submitting assignment:', error);
@@ -122,7 +132,7 @@ async function run() {
       }
       const result = await assignmentCollection.updateOne(filter, assignments, options);
       res.send(result);
-    })
+    });
 
 
     // for delete
