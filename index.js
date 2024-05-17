@@ -83,6 +83,35 @@ async function run() {
       res.send(results);
     });
 
+    app.get('/pendingAssignments', async (req, res) => {
+      try {
+        const query = { status: "pending" };
+        const cursor = submittedAssignmentCollection.find(query);
+        const results = await cursor.toArray();
+        res.send(results);
+      } catch (error) {
+        console.error("Error fetching pending assignments:", error);
+        res.status(500).json({ error: "Failed to fetch pending assignments" });
+      }
+    });
+
+
+    app.put('/pendingAssignmentUpdate/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedAssignment = req.body;
+      const assignment = {
+        $set: {
+          status: "marked",
+          feedback: updatedAssignment.feedback,
+          obtainedMarks: updatedAssignment.obtainedMarks,
+        }
+      }
+      const result = await submittedAssignmentCollection.updateOne(filter, assignment, options);
+      res.send(result);
+    });
+
 
 
     // to update
