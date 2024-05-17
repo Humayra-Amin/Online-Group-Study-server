@@ -75,7 +75,14 @@ async function run() {
     });
 
 
-    
+    app.get('/myAssignment/:studentEmail', async (req, res) => {
+      const studentEmail = req.params.studentEmail;
+      const query = { studentEmail: studentEmail };
+      const cursor = submittedAssignmentCollection.find(query);
+      const results = await cursor.toArray();
+      res.send(results);
+    });
+
 
 
     // to update
