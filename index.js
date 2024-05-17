@@ -36,6 +36,8 @@ async function run() {
     // console.log("Connected to MongoDB!");
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
+    const submittedAssignmentCollection = client.db('AssignmentDB').collection('submittedAssignment');
+
 
 
     // To get data
@@ -43,7 +45,7 @@ async function run() {
       const cursor = assignmentCollection.find();
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
 
 
     // for update
@@ -62,8 +64,20 @@ async function run() {
       const result = await assignmentCollection.insertOne(newAssignment);
       res.send(result);
     });
+
+
+
+    app.post('/submitAssignment', async (req, res) => {
+      const newSubmittedAssignment = req.body;
+      console.log(newSubmittedAssignment);
+      const result = await submittedAssignmentCollection.insertOne(newSubmittedAssignment);
+      res.send(result);
+    });
+
+
     
-    
+
+
     // to update
     app.put('/assignments/:_id', async (req, res) => {
       const _id = req.params._id;
