@@ -37,6 +37,7 @@ async function run() {
 
     const assignmentCollection = client.db('AssignmentDB').collection('assignment');
     const submittedAssignmentCollection = client.db('AssignmentDB').collection('submittedAssignment');
+    const commentCollection = client.db('AssignmentDB').collection('comments');
 
 
 
@@ -65,6 +66,20 @@ async function run() {
       res.send(result);
     });
 
+
+    // for comments
+    app.post('/comments', async (req, res) => {
+      const newComment = req.body;
+      console.log(newComment);
+      const result = await commentCollection.insertOne(newComment);
+      res.send(result);
+    });
+
+    app.get('/comments', async (req, res) => {
+      const cursor = commentCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
 
     app.post('/submitAssignment', async (req, res) => {
