@@ -81,7 +81,7 @@ async function run() {
       res.send(result);
     });
 
-
+    // for submitted and pending assignment
     app.post('/submitAssignment', async (req, res) => {
       const newSubmittedAssignment = req.body;
       console.log(newSubmittedAssignment);
