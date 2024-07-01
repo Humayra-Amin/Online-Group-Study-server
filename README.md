@@ -23,3 +23,12 @@ The Study Bizz is a web application designed to facilitate collaborative learnin
 
 # Live Site URL
 - https://online-group-study-d5764.web.app/
+
+# To clone this project follow the below steps: 
+
+- Go the repository that you want to clone
+- Copy the code URL from the green "Code" button. can copy either SSH if SSH key is set up or else copy HTTPS.
+- Now open the Command Prompt of that folder where the clone repository will be set.
+- Now in command prompt terminal give command 'git clone copied-link' (copied-link is the link that are copied from the repository).
+- After all the steps done the project will be cloned.
+- Also can checked if the cloning is done correctly by giving command 'git remote -v' in terminal.
